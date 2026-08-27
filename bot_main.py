@@ -394,24 +394,7 @@ async def apply_interest_task():
     await db.apply_bank_interest(multiplier)
     print(f"  [ECONOMY] Hourly bank interest applied: {rate:.2f}% ({tier})")
 
-@tasks.loop(hours=24)
-async def check_loans_task():
-    """Check for overdue loans and apply penalties."""
-    users = await db.get_all_users()
-    now = datetime.now()
-    for user_doc in users:
-        loan = user_doc.get("loan")
-        if not loan or loan.get("paid", False): continue
-        
-        due_date = datetime.strptime(loan["due_date"], "%Y-%m-%d %H:%M:%S")
-        if now > due_date:
-            # Overdue!
-            user_id = user_doc["_id"]
-            amount = loan["amount"]
-            penalty = int(amount * 0.1) # 10% penalty
-            await db.update_balance(user_id, -(amount + penalty))
-            await db.clear_loan(user_id)
-            print(f"  [ECONOMY] Loan overdue for {user_id}. Penalty applied.")
+
 
 # ══════════════════════════════════════════════
 #  TICKET SYSTEM UI
@@ -608,43 +591,6 @@ class HelpSelect(discord.ui.Select):
             options.append(discord.SelectOption(label="Server Boost", description="Rewards, Logs & Special Roles", emoji="💎", value="boost"))
         super().__init__(placeholder="Select a category to view commands...", options=options)
 
-class SetupGuideView(discord.ui.View):
-    """View containing the button to reveal the Setup Guide."""
-    def __init__(self):
-        super().__init__(timeout=180)
-
-    @discord.ui.button(label="📖 Setup Guide", style=discord.ButtonStyle.secondary, custom_id="show_setup_guide")
-    async def show_guide(self, interaction: discord.Interaction, button: discord.ui.Button):
-        prefix = load_config().get("PREFIX", "!")
-        
-        embed = discord.Embed(
-            title="📖 Paradox Bot | Setup Guide",
-            description=(
-                "Welcome to the official setup guide! Follow these steps to get your server running perfectly:\n\n"
-                "### 1️⃣ Core Greetings\n"
-                f"• Set where I talk: `{prefix}setwelcomechannel #channel`\n"
-                f"• Customize the join message: `{prefix}setwelcome Welcome {mention}!`\n"
-                f"• Test the result: `{prefix}testjoin`\n\n"
-                "### 2️⃣ Automation\n"
-                f"• Assign a role on join: `{prefix}autorole Member`\n"
-                f"• Enable the swear filter: `{prefix}togglefilter`\n"
-                f"• Choose a log channel: `{prefix}setlogchannel #logs`\n\n"
-                "### 3️⃣ Support & Service\n"
-                f"• Create a ticket panel: `{prefix}setupticket support`\n"
-                f"• Setup carry requests: `{prefix}setupticket carry`\n"
-                f"• Add game options: `{prefix}addgame ALS ⚔️ Anime Last Stand`\n\n"
-                "### 4️⃣ Economy Management\n"
-                f"• Set daily reward: (Managed via DB)\n"
-                f"• Reset economy: `{prefix}reseteco all` (Owner only)\n\n"
-                "**Need more help?** Join our support server or visit our documentation! 💜"
-            ),
-            color=0x9B59B6,
-            timestamp=discord.utils.utcnow()
-        )
-        embed.set_footer(text="Paradox Bot | The ultimate server assistant")
-        
-        await interaction.response.send_message(embed=embed, ephemeral=True)
-
     async def callback(self, interaction: discord.Interaction):
         cat = self.values[0]
         prefix = load_config().get("PREFIX", "!")
@@ -796,6 +742,42 @@ class SetupGuideView(discord.ui.View):
 
         embed.set_footer(text=f"Paradox Bot 💜 | {cat.capitalize()} Menu")
         await interaction.response.edit_message(embed=embed)
+
+class SetupGuideView(discord.ui.View):
+    """View containing the button to reveal the Setup Guide."""
+    def __init__(self):
+        super().__init__(timeout=180)
+
+    @discord.ui.button(label="📖 Setup Guide", style=discord.ButtonStyle.secondary, custom_id="show_setup_guide")
+    async def show_guide(self, interaction: discord.Interaction, button: discord.ui.Button):
+        prefix = load_config().get("PREFIX", "!")
+        
+        embed = discord.Embed(
+            title="📖 Paradox Bot | Setup Guide",
+            description=(
+                "Welcome to the official setup guide! Follow these steps to get your server running perfectly:\n\n"
+                "### 1️⃣ Core Greetings\n"
+                f"• Set where I talk: `{prefix}setwelcomechannel #channel`\n"
+                f"• Customize the join message: `{prefix}setwelcome Welcome {{mention}}!`\n"
+                f"• Test the result: `{prefix}testjoin`\n\n"
+                "### 2️⃣ Automation\n"
+                f"• Assign a role on join: `{prefix}autorole Member`\n"
+                f"• Enable the swear filter: `{prefix}togglefilter`\n"
+                f"• Choose a log channel: `{prefix}setlogchannel #logs`\n\n"
+                "### 3️⃣ Support & Service\n"
+                f"• Create a ticket panel: `{prefix}setupticket support`\n"
+                f"• Setup carry requests: `{prefix}setupticket carry`\n"
+                f"• Add game options: `{prefix}addgame ALS ⚔️ Anime Last Stand`\n\n"
+                "### 4️⃣ Economy Management\n"
+                f"• Set daily reward: (Managed via DB)\n"
+                f"• Reset economy: `{prefix}reseteco all` (Owner only)\n\n"
+                "**Need more help?** Join our support server or visit our documentation! 💜"
+            ),
+            color=0x9B59B6,
+            timestamp=discord.utils.utcnow()
+        )
+        embed.set_footer(text="Paradox Bot | The ultimate server assistant")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
 class HelperTicketView(discord.ui.View):
     """View for the Helper/Carry application dropdown."""
@@ -3288,86 +3270,7 @@ class VaultMinigame(discord.ui.View):
         else:
             await interaction.response.send_message(f"✅ Correct! {len(self.player_input)}/{len(self.sequence)}", ephemeral=True)
 
-class HeistTargetView(discord.ui.View):
-    def __init__(self, ctx):
-        super().__init__(timeout=60)
-        self.ctx = ctx
-        self.user_id = ctx.author.id
 
-    @discord.ui.button(label="Jewelry Store", style=discord.ButtonStyle.primary)
-    async def jewelry(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if interaction.user.id != self.user_id: return
-        await self.choose_target(interaction, "jewelry")
-
-    @discord.ui.button(label="Main Bank", style=discord.ButtonStyle.primary)
-    async def bank(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if interaction.user.id != self.user_id: return
-        await self.choose_target(interaction, "bank")
-
-    @discord.ui.button(label="Armored Truck", style=discord.ButtonStyle.primary)
-    async def truck(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if interaction.user.id != self.user_id: return
-        await self.choose_target(interaction, "truck")
-
-    async def choose_target(self, interaction: discord.Interaction, target: str):
-        embed = discord.Embed(title="🏦 Strategic Heist", color=0x34495E)
-        embed.description = f"Target: **{HEIST_TARGETS[target]['name']}**. Choose difficulty:"
-        view = HeistDifficultyView(self.ctx, target)
-        await interaction.response.edit_message(embed=embed, view=view)
-
-class HeistDifficultyView(discord.ui.View):
-    def __init__(self, ctx, target: str):
-        super().__init__(timeout=60)
-        self.ctx = ctx
-        self.user_id = ctx.author.id
-        self.target = target
-
-    @discord.ui.button(label="Easy", style=discord.ButtonStyle.success)
-    async def easy(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.start_minigame(interaction, "easy")
-
-    @discord.ui.button(label="Normal", style=discord.ButtonStyle.primary)
-    async def normal(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.start_minigame(interaction, "normal")
-
-    @discord.ui.button(label="Hard", style=discord.ButtonStyle.danger)
-    async def hard(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await self.start_minigame(interaction, "hard")
-
-    async def start_minigame(self, interaction: discord.Interaction, difficulty: str):
-        if interaction.user.id != self.user_id: return
-        
-        target_info = HEIST_TARGETS[self.target]
-        game_type = random.choice(target_info["minigames"])
-        
-        callback = self.make_callback(difficulty)
-        
-        if game_type == "lockpick": view = LockpickMinigame(self.user_id, difficulty, callback)
-        elif game_type == "safe": view = SafeMinigame(self.user_id, difficulty, callback)
-        elif game_type == "hacking": view = HackingMinigame(self.user_id, difficulty, callback)
-        elif game_type == "vault": view = VaultMinigame(self.user_id, difficulty, callback)
-        else: # Fallback
-            view = HackingMinigame(self.user_id, difficulty, callback)
-
-        await interaction.response.edit_message(content=f"🎯 **MISSION:** Complete the **{game_type.upper()}** challenge!", view=view)
-
-    def make_callback(self, difficulty):
-        async def heist_callback(interaction, success):
-            target_data = HEIST_TARGETS[self.target]
-            base_low, base_high = target_data[difficulty]
-            
-            if success:
-                amount = random.randint(base_low, base_high)
-                await db.update_balance(str(self.user_id), amount)
-                embed = discord.Embed(title="💰 HEIST SUCCESSFUL", description=f"You looted **{amount:,}** {CURRENCY_NAME}!", color=0x2ECC71)
-            else:
-                loss = random.randint(10000, 50000)
-                await db.update_balance(str(self.user_id), -loss)
-                await db.set_cooldown(str(self.user_id), "jail", datetime.now() + timedelta(minutes=30))
-                embed = discord.Embed(title="🚨 HEIST FAILED", description=f"Busted! Fined **{loss:,}** and jailed for 30m.", color=0xE74C3C)
-            
-            await interaction.response.edit_message(content=None, embed=embed, view=None)
-        return heist_callback
 
 # ══════════════════════════════════════════════
 #  ERROR HANDLING
