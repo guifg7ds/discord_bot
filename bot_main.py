@@ -5786,24 +5786,6 @@ async def quest_claim_cmd(ctx: commands.Context, action: str = "claim"):
     
     await ctx.send(f"🎊 You claimed **{claimed_count}** quest rewards and earned **{total_reward:,}** {CURRENCY_NAME}!")
 
-def run_health_check_server():
-    from http.server import SimpleHTTPRequestHandler, HTTPServer
-    class HealthCheckHandler(SimpleHTTPRequestHandler):
-        def do_GET(self):
-            self.send_response(200)
-            self.send_header("Content-Type", "text/plain")
-            self.end_headers()
-            self.wfile.write(b"Bot is alive!")
-
-        def log_message(self, format, *args):
-            # Suppress default server logging to keep bot logs clean
-            pass
-
-    port = int(os.environ.get("PORT", 8080))
-    server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
-    print(f"  🌐  Health check server listening on port {port}...")
-    server.serve_forever()
-
 if __name__ == "__main__":
     if not TOKEN or TOKEN == "YOUR_BOT_TOKEN_HERE":
         print("═" * 50)
@@ -5812,10 +5794,5 @@ if __name__ == "__main__":
         print("  🚢  Railway: Add DISCORD_TOKEN in variables")
         print("═" * 50)
     else:
-        # Start a simple HTTP server in a background thread for Render Web Service health checks
-        import threading
-        if os.environ.get("PORT"):
-            threading.Thread(target=run_health_check_server, daemon=True).start()
-
         # Run the bot
         bot.run(TOKEN)
