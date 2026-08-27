@@ -1,0 +1,133 @@
+{
+    "PREFIX": "!",
+    "LEVELING_SYSTEM_ENABLED": true,
+    "AUTO_ROLE_NAME": "Community Member",
+    "WELCOME_CHANNEL_ID": 1498380300785418250,
+    "GOODBYE_CHANNEL_ID": 1498381244059090985,
+    "WELCOME_IMAGE_URL": "https://media1.tenor.com/m/Hmk-QGKi0l4AAAAd/mbappe-sweater.gif",
+    "GOODBYE_IMAGE_URL": null,
+    "WELCOME_COLOR": "#9B59B6",
+    "HELLO_MESSAGE": "WHY NGA WHY",
+    "GOODBYE_MESSAGE": "\ud83d\ude22 Goodbye! We'll miss you! Hope to see you again soon! \ud83d\udc9c",
+    "JOIN_MESSAGE": "\ud83c\udf89 **Welcome to the server, {mention}!** \ud83c\udf89\n\nYou are member **#{count}**!\nMake sure to read the rules and have fun! \ud83d\udc9c",
+    "LEAVE_MESSAGE": "\ud83d\ude22 **{member}** has left the server.\nWe now have **{count}** members.\nHope to see you again! \ud83d\udc9c",
+    "WELCOME_DM": true,
+    "SWEAR_WORDS": [
+        "shitty",
+        "bitch",
+        "bitches",
+        "ass",
+        "asshole",
+        "assholes",
+        "damn",
+        "damnit",
+        "dick",
+        "dickhead",
+        "cunt",
+        "cunts",
+        "whore",
+        "nigger",
+        "nigga",
+        "hoe",
+        "niga",
+        "niger",
+        "niggir",
+        "niggor",
+        "nsfw",
+        "only fans",
+        "only_fans"
+    ],
+    "SWEAR_FILTER_ENABLED": true,
+    "SWEAR_WARN_MESSAGE": "\u26a0\ufe0f {user}, watch your language! That word is not allowed here.",
+    "LOG_CHANNEL_ID": null,
+    "BOOST_CHANNEL_ID": 1498277663994024079,
+    "HELPER_GAMES": {
+        "ALS": {
+            "name": "Anime Last Stand (ALS)",
+            "emoji": "\u2694\ufe0f",
+            "questions": "1. Roblox Username?\n2. Timezone? (e.g. GMT+8)\n3. How active are you daily?\n4. What are your best Meta units? (Send SS)\n5. Can you solo Cid Raid?\n6. Current Level?",
+            "active": true
+        },
+        "AV": {
+            "name": "Anime Vanguards (AV)",
+            "emoji": "\ud83d\udee1\ufe0f",
+            "questions": "1. Roblox Username?\n2. Timezone?\n3. Do you have Shinobi Sage or Super 4 Rogita?\n4. Best support units (e.g. Sprintwagon)?\n5. Can you clear Nightmare solo?\n6. Image of meta team.",
+            "active": true
+        },
+        "ASTD": {
+            "name": "All Star Tower Defense (ASTD)",
+            "emoji": "\u2b50",
+            "questions": "1. Username & Level?\n2. Timezone?\n3. Do u own 3x GamePass?\n4. List your best 6/7-star units (or SS).\n5. Highest Gauntlet Wave solo?\n6. Active hours?",
+            "active": false
+        },
+        "AG": {
+            "name": "Anime Guardians (AG)",
+            "emoji": "\ud83d\udc7b",
+            "questions": "1. Username?\n2. Timezone?\n3. Best Guardians (Send SS)?\n4. Experience with Raids?\n5. Daily active time?",
+            "active": true
+        },
+        "UTD": {
+            "name": "Universal Tower Defense (UTD)",
+            "emoji": "\ud83c\udf0d",
+            "questions": "1. Username & Level?\n2. Timezone?\n3. Best Units (SS)?\n4. Highest Wave solo?\n5. Are you able to carry new events?",
+            "active": false
+        },
+        "BL": {
+            "name": "Bizarre Lineage (BL)",
+            "emoji": "\ud83d\udcab",
+            "questions": "1. Roblox Username?\n2. Current Class & Level?\n3. Best Lineage traits?\n4. Can you solo Bosses?",
+            "active": false
+        },
+        "SP": {
+            "name": "Sailor Piece (SP)",
+            "emoji": "\u26f5",
+            "questions": "1. Username & Level?\n2. Best Fruit/Ability?\n3. Daily activity?\n4. Boss Carry experience?",
+            "active": true
+        },
+        "ARX": {
+            "name": "Anime Rangers X (ARX)",
+            "emoji": "\ud83d\udd25",
+            "questions": "1. Username & Level?\n2. Best Rangers (SS)?\n3. Raid Boss experience?\n4. Timezone?",
+            "active": false
+        },
+        "AOL": {
+            "name": "Anime Overlord (AOL)",
+            "emoji": "\ud83d\udc51",
+            "questions": "1. Username & Level?\n2. Best Units (SS)?\n3. Highest difficulty cleared solo?\n4. Timezone?",
+            "active": true
+        },
+        "AC": {
+            "name": "Anime Crusaders (AC)",
+            "emoji": "\ud83d\udde1\ufe0f",
+            "questions": "1. Username?\n2. Best Crusaders (SS)?\n3. Timezone?\n4. Endless Mode record?",
+            "active": true
+        }
+    },
+    "VOUCH_CHANNEL_ID": null,
+    "VOUCHES": {},
+    "BYPASS_USER_IDS": [],
+    "BYPASS_ROLE_IDS": [],
+    "SWEAR_PUNISHMENT_DURATION": 1,
+    "SWEAR_THRESHOLDS": {
+        "silent": 1,
+        "warn1": 2,
+        "warn2": 3,
+        "mute": 4,
+        "quarantine": 8
+    },
+    "COMMAND_COOLDOWNS": {
+        "daily": 86400,
+        "work": 300,
+        "crime": 60,
+        "heist": 300,
+        "steal": 300,
+        "casino": 5
+    },
+    "PUNISHMENT_TIERS": {
+        "1.1": {"action": "mute", "duration": 10, "label": "Rule 1.1 (Minor)"},
+        "1.2": {"action": "mute", "duration": 30, "label": "Rule 1.2 (Standard)"},
+        "1.3": {"action": "mute", "duration": 60, "label": "Rule 1.3 (Serious)"},
+        "1.4": {"action": "quarantine", "duration": 1440, "label": "Rule 1.4 (Severe)"},
+        "1.5": {"action": "quarantine", "duration": 10080, "label": "Rule 1.5 (Critical)"}
+    }
+}
