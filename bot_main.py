@@ -3499,6 +3499,7 @@ async def handle_overdue_loan(ctx_or_user, user_id, loan_data):
             fine = int(amount * 0.2)  # Increase fine
             await db.update_balance(user_id, -fine)
             await safe_send(f"⚠️ Your loan is overdue. Fined **{fine:,}** {CURRENCY_NAME}.")
+            return
 
     await db.update_balance(user_id, -fine)
     await db.set_cooldown(user_id, "jail", datetime.now() + timedelta(hours=jail_time))
