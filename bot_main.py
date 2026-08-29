@@ -5621,6 +5621,14 @@ def run_health_check_server():
             except Exception as e:
                 print(f"Error handling request: {e}", file=sys.stderr, flush=True)
 
+        def do_HEAD(self):
+            try:
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain")
+                self.end_headers()
+            except Exception as e:
+                print(f"Error handling HEAD request: {e}", file=sys.stderr, flush=True)
+
         def log_message(self, format, *args):
             # Suppress default server logging to keep bot logs clean
             pass

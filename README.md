@@ -80,6 +80,27 @@ pip install -r requirements.txt
 python bot_main.py
 ```
 
+## 🚢 Deploying to Render
+
+1. Create a new **Web Service** on Render and connect your GitHub repo.
+2. Use these build/start commands:
+
+```bash
+pip install -r requirements.txt
+python bot_main.py
+```
+
+3. Set environment variables in the Render dashboard:
+- `DISCORD_TOKEN` (your bot token)
+- `MONGO_URI` (optional, MongoDB Atlas URI)
+- `PORT` (optional, default `8080`)
+
+4. Choose the `python` environment and a suitable instance. Render will run the service and the bot's built-in health server will bind to the configured `PORT` so Render's HTTP checks succeed.
+
+Notes:
+- Use a **Web Service** (not a background worker) so Render routes HTTP healthchecks to your app.
+- The repo includes a simple HTTP health endpoint (`/`) that responds to GET and HEAD requests used by uptime monitors.
+
 ---
 
 ## 📋 Essential Commands

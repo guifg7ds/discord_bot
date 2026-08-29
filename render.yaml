@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: paradox-bot
+    env: python
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_main.py
+    envVars:
+      - key: DISCORD_TOKEN
+      - key: MONGO_URI
+      - key: PORT
