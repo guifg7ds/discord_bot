@@ -5623,9 +5623,8 @@ def run_health_check_server():
 
         def do_HEAD(self):
             try:
-                self.send_response(200)
-                self.send_header("Content-Type", "text/plain")
-                self.end_headers()
+                # Delegate to GET handler (user requested behavior)
+                self.do_GET()
             except Exception as e:
                 print(f"Error handling HEAD request: {e}", file=sys.stderr, flush=True)
 
