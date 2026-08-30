@@ -608,7 +608,9 @@ class HelpSelect(discord.ui.Select):
                 f"`{prefix}setimg <welcome/goodbye> <url>` - Add a beautiful banner to greetings\n"
                 f"`{prefix}setcolor <hex>` - Match my greeting colors to your server theme\n"
                 f"`{prefix}setgif <action> <url>` - Set GIFs for social/mod actions\n"
-                f"`{prefix}togglewelcome` - Turn the greeting system on or off\n"
+                f"`{prefix}togglewelcome` - Turn welcome messages on or off\n"
+                f"`{prefix}turnoffwelcome` - Disable welcome messages\n"
+                f"`{prefix}turnoffgoodbye` - Disable goodbye messages\n"
                 f"`{prefix}testjoin` / `{prefix}testleave` - Let's see how the greetings look!\n\n"
                 f"**Tip:** All changes are saved instantly to our cloud database. 🔄"
             )
@@ -1051,7 +1053,7 @@ async def on_member_join(member: discord.Member):
 async def on_member_remove(member: discord.Member):
     """Send a goodbye message when someone leaves."""
     cfg = load_config()
-    if not cfg.get("WELCOME_ENABLED", True):
+    if not cfg.get("GOODBYE_ENABLED", cfg.get("WELCOME_ENABLED", True)):
         return
 
     channel_id = cfg.get("GOODBYE_CHANNEL_ID") or cfg.get("WELCOME_CHANNEL_ID")
@@ -2054,6 +2056,24 @@ async def toggle_welcome_cmd(ctx: commands.Context):
     
     status = "🟢 **ENABLED**" if not current else "🔴 **DISABLED**"
     await ctx.send(f"Welcome messages are now {status}")
+
+@bot.command(name="turnoffwelcome")
+@commands.has_permissions(administrator=True)
+async def turn_off_welcome_cmd(ctx: commands.Context):
+    """Disable welcome messages. Admin only."""
+    cfg = load_config()
+    cfg["WELCOME_ENABLED"] = False
+    await save_config_sync(cfg)
+    await ctx.send("✅ Welcome messages are now turned off.")
+
+@bot.command(name="turnoffgoodbye")
+@commands.has_permissions(administrator=True)
+async def turn_off_goodbye_cmd(ctx: commands.Context):
+    """Disable goodbye messages. Admin only."""
+    cfg = load_config()
+    cfg["GOODBYE_ENABLED"] = False
+    await save_config_sync(cfg)
+    await ctx.send("✅ Goodbye messages are now turned off.")
 
 # ── !whitelist ───────────────────────────────
 
